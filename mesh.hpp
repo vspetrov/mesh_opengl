@@ -23,6 +23,7 @@ public:
     void addTet(Tet *tet) { tets.push_back(tet); }
     vector<Tet *>& getTets() { return tets; }
     int getId()  { return id; }
+    double *getC() { return c; }
 };
 
 class Tet{
@@ -45,6 +46,7 @@ class Facet{
     int id[3];
     Point* points[3];
     vector<Tet *> tets;
+    double normal[3];
 public:
     Facet(){}
     Facet(Point* v1, Point* v2, Point* v3, Tet *tet) {
@@ -56,6 +58,16 @@ public:
         id[1] = v2->getId();
         id[2] = v3->getId();
     }
+    Facet(Point* v1, Point* v2, Point* v3, vector<Tet *> tets) {
+        points[0] = v1;
+        points[1] = v2;
+        points[2] = v3;
+        tets = tets;
+        id[0] = v1->getId();
+        id[1] = v2->getId();
+        id[2] = v3->getId();
+    }
+    double *getNormal() { return normal; }
     const int* getId() const { return id; }
     bool operator==(Facet &f) {
         const int *fid = f.getId();
@@ -78,12 +90,9 @@ public:
     }
     Point** getPoints()  { return points; }
 
-    vector<Tet *> getTets() { return tets; }
-    // Facet& operator=(Facet& f) {
-        // return Facet(f.getPoints()[0],
-                     // f.getPoints()[1],
-                     // f.getPoints()[2],
-                     // &f.getTets()[0]);
+    vector<Tet *>* getTets() { return &tets; }
+    void calcNormal();
+    // Facet& operator=(const Facet& f) {
     // }
 };
 
@@ -91,10 +100,14 @@ class Mesh {
     vector<Point> points;
     vector<Tet>   tets  ;
     vector<Facet> facets;
+    vector<Facet> boundary_facets;
     void read_points(string filename);
     void read_tets(string filename);
     void build_facets();
 public:
     Mesh(string filename);
+    vector<Point>& getPoints() { return points; }
+    vector<Facet>& getBoundaryFacets() { return boundary_facets; }
+    void normalizeForDrawing();
 };
 #endif
