@@ -38,25 +38,31 @@
  **
  ****************************************************************************/
 
- #ifndef WINDOW_H
- #define WINDOW_H
+#ifndef WINDOW_H
+#define WINDOW_H
 
- #include <QWidget>
+#include <QWidget>
 #include "glwidget.h"
 #include "mesh.hpp"
- class GLWidget;
+class GLWidget;
 
- class Window : public QWidget
- {
-     Q_OBJECT
+class Window : public QWidget
+{
+    Q_OBJECT
 
- public:
-     Window();
-     void set_mesh(Mesh *_mesh) { glWidget->set_mesh(_mesh); }
- protected:
+public:
+    Window();
+    void set_mesh(Mesh *_mesh) { glWidget->set_mesh(_mesh); }
+    vector<double>* getValueStorage() {
+        return glWidget->getValueStorage();
+    }
+    void setRange(double max, double min) {
+        glWidget->setRange(max,min);
+    }
+protected:
 
- private:
-     GLWidget *glWidget;
- };
+private:
+    GLWidget *glWidget;
+};
 
- #endif
+#endif

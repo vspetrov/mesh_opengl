@@ -152,5 +152,8 @@ void Facet::calcNormal() {
     if (v>0) {
         for (int i=0; i<3; i++)
             normal[i] = -normal[i];
+        Point *p = points[2];
+        points[2] = points[1];
+        points[1] = p;
     }
 }

@@ -38,8 +38,8 @@
  **
  ****************************************************************************/
 
- #include <QApplication>
- #include <QDesktopWidget>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -48,7 +48,7 @@
 using namespace std;
 
 
- #include "window.h"
+#include "window.h"
 
 int main(int argc, char *argv[])
 {
@@ -66,13 +66,20 @@ int main(int argc, char *argv[])
         f.calcNormal();
 
     window.set_mesh(mesh);
+    window.setRange(1,-1);
+    auto v = window.getValueStorage();
 
-    if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        window.show();
-    else
-        window.showMaximized();
+    for (auto &p: mesh->getPoints()) {
+        (*v)[p.getId()] = p.getC()[2];
+    }
+
+
+
+    window.show();
+    window.resize(800,800);
+    // if (((float)widgetArea / (float)desktopArea) < 0.75f)
+    //     window.show();
+    // else
+    //     window.showMaximized();
     return app.exec();
 }
-
-
-

@@ -53,33 +53,47 @@ public:
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
-    void set_mesh(Mesh *_mesh) { mesh = _mesh; }
- public slots:
-     void setXRotation(int angle);
-     void setYRotation(int angle);
-     void setZRotation(int angle);
+    void set_mesh(Mesh *_mesh) {
+        mesh = _mesh;
+        values.resize(mesh->getPoints().size());
+    }
+    void resize(int width, int height) { resizeGL(width,height); }
+    vector<double>* getValueStorage() {
+        return &values;
+    }
+    void setRange(double max, double min) {
+        RangeMin = min;
+        RangeMax = max;
+    }
+    public slots:
+        void setXRotation(int angle);
+        void setYRotation(int angle);
+        void setZRotation(int angle);
 
- signals:
-     void xRotationChanged(int angle);
-     void yRotationChanged(int angle);
-     void zRotationChanged(int angle);
+signals:
+        void xRotationChanged(int angle);
+        void yRotationChanged(int angle);
+        void zRotationChanged(int angle);
 
 protected:
-    void initializeGL();
-    void paintGL();
-    void resizeGL(int width, int height);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-
+        void initializeGL();
+        void paintGL();
+        void resizeGL(int width, int height);
+        void mousePressEvent(QMouseEvent *event);
+        void mouseMoveEvent(QMouseEvent *event);
+        void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
+        void setColor(double v, double Max, double Min);
 private:
-     int xRot;
-     int yRot;
-     int zRot;
-
-    QPoint lastPos;
-    QColor qtGreen;
-    QColor qtPurple;
-    Mesh *mesh;
+        int xRot;
+        int yRot;
+        int zRot;
+        double RangeMax;
+        double RangeMin;
+        vector<double> values;
+        QPoint lastPos;
+        QColor qtGreen;
+        QColor qtPurple;
+        Mesh *mesh;
 };
 
- #endif
+#endif
