@@ -5,6 +5,8 @@
 #include <tuple>
 #include <unordered_map>
 #include <sstream>
+#include <algorithm>
+
 using namespace std;
 
 class Tet;
@@ -13,15 +15,15 @@ class Facet;
 class Point{
     double c[3];
     int id;
-    vector<Tet *> tets;
+    // vector<Tet *> tets;
 public:
     Point(){}
     Point(int _id, double x, double y, double z) {
         id = _id;
         c[0] = x; c[1] = y; c[2] = z;
     }
-    void addTet(Tet *tet) { tets.push_back(tet); }
-    vector<Tet *>& getTets() { return tets; }
+    // void addTet(Tet *tet) { tets.push_back(tet); }
+    // vector<Tet *>& getTets() { return tets; }
     int getId()  { return id; }
     double *getC() { return c; }
 };
@@ -54,19 +56,23 @@ public:
         points[1] = v2;
         points[2] = v3;
         tets.push_back(tet);
-        id[0] = v1->getId();
-        id[1] = v2->getId();
-        id[2] = v3->getId();
+        std::vector<int> vid(3);
+        vid[0] = v1->getId();
+        vid[1] = v2->getId();
+        vid[2] = v3->getId();
+        sort(vid.begin(), vid.end());
+        for (int i=0; i<3; i++)
+            id[i] = vid[i];
     }
-    Facet(Point* v1, Point* v2, Point* v3, vector<Tet *> tets) {
-        points[0] = v1;
-        points[1] = v2;
-        points[2] = v3;
-        tets = tets;
-        id[0] = v1->getId();
-        id[1] = v2->getId();
-        id[2] = v3->getId();
-    }
+    // Facet(Point* v1, Point* v2, Point* v3, vector<Tet *> tets) {
+    //     points[0] = v1;
+    //     points[1] = v2;
+    //     points[2] = v3;
+    //     tets = tets;
+    //     id[0] = v1->getId();
+    //     id[1] = v2->getId();
+    //     id[2] = v3->getId();
+    // }
     double *getNormal() { return normal; }
     const int* getId() const { return id; }
     bool operator==(Facet &f) {
@@ -108,6 +114,7 @@ public:
     Mesh(string filename);
     vector<Point>& getPoints() { return points; }
     vector<Facet>& getBoundaryFacets() { return boundary_facets; }
+    vector<Facet>& getFacets() { return facets; }
     void normalizeForDrawing();
 };
 #endif

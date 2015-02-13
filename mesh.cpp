@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
-#include <algorithm>
 #include <assert.h>
 template class vector<Facet>;
 void Mesh::read_points(string filename) {
@@ -82,8 +81,9 @@ void Mesh::build_facets() {
     facets.erase(uit,facets.end());
     for (auto &f : facets)
         if (f.getTets()->size() == 1) {
-            f.calcNormal();
             boundary_facets.push_back(f);
+        } else {
+            assert(f.getTets()->size() == 2);
         }
 }
 

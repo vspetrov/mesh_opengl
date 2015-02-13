@@ -115,6 +115,9 @@ int main(int argc, char** argv) {
     string mesh_file(argv[1]);
     mesh = new Mesh(mesh_file);
     mesh->normalizeForDrawing();
+
+    for (auto &f : mesh->getBoundaryFacets())
+        f.calcNormal();
     glutInit(&argc, argv);            // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
     glutInitWindowSize(800, 800);   // Set the window's initial width & height
