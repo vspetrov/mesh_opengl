@@ -38,41 +38,25 @@
  **
  ****************************************************************************/
 
- #include <QApplication>
- #include <QDesktopWidget>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+ #ifndef WINDOW_H
+ #define WINDOW_H
+
+ #include <QWidget>
+#include "glwidget.h"
 #include "mesh.hpp"
-using namespace std;
+ class GLWidget;
 
+ class Window : public QWidget
+ {
+     Q_OBJECT
 
- #include "window.h"
+ public:
+     Window();
+     void set_mesh(Mesh *_mesh) { glWidget->set_mesh(_mesh); }
+ protected:
 
-int main(int argc, char *argv[])
-{
-    QApplication app(argc, argv);
-    Window window;
-    window.resize(window.sizeHint());
-    int desktopArea = QApplication::desktop()->width() *
-        QApplication::desktop()->height();
-    int widgetArea = window.width() * window.height();
-    string mesh_file(argv[1]);
-    auto mesh = new Mesh(mesh_file);
-    mesh->normalizeForDrawing();
+ private:
+     GLWidget *glWidget;
+ };
 
-    for (auto &f : mesh->getBoundaryFacets())
-        f.calcNormal();
-
-    window.set_mesh(mesh);
-
-    if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        window.show();
-    else
-        window.showMaximized();
-    return app.exec();
-}
-
-
-
+ #endif

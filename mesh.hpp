@@ -2,8 +2,6 @@
 #define __MESH_HPP__
 #include <vector>
 #include <string>
-#include <tuple>
-#include <unordered_map>
 #include <sstream>
 #include <algorithm>
 

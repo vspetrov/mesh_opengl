@@ -77,14 +77,17 @@ void Mesh::build_facets() {
                 cit->getTets()->at(0));
         }
     }
+    int s = facets.size();
     auto uit = unique(facets.begin(), facets.end());
     facets.erase(uit,facets.end());
+
     for (auto &f : facets)
         if (f.getTets()->size() == 1) {
             boundary_facets.push_back(f);
         } else {
             assert(f.getTets()->size() == 2);
         }
+
 }
 
 Mesh::Mesh(string filename) {
@@ -146,7 +149,7 @@ void Facet::calcNormal() {
     double v = 0;
     for (int i=0; i<3; i++)
         v += v_check[i]*normal[i];
-    if (v<0) {
+    if (v>0) {
         for (int i=0; i<3; i++)
             normal[i] = -normal[i];
     }

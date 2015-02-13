@@ -38,41 +38,48 @@
  **
  ****************************************************************************/
 
- #include <QApplication>
- #include <QDesktopWidget>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+#ifndef GLWIDGET_H
+#define GLWIDGET_H
+
+#include <QGLWidget>
 #include "mesh.hpp"
-using namespace std;
-
-
- #include "window.h"
-
-int main(int argc, char *argv[])
+class GLWidget : public QGLWidget
 {
-    QApplication app(argc, argv);
-    Window window;
-    window.resize(window.sizeHint());
-    int desktopArea = QApplication::desktop()->width() *
-        QApplication::desktop()->height();
-    int widgetArea = window.width() * window.height();
-    string mesh_file(argv[1]);
-    auto mesh = new Mesh(mesh_file);
-    mesh->normalizeForDrawing();
+    Q_OBJECT
 
-    for (auto &f : mesh->getBoundaryFacets())
-        f.calcNormal();
+public:
+    GLWidget(QWidget *parent = 0);
+    ~GLWidget();
 
-    window.set_mesh(mesh);
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+    void set_mesh(Mesh *_mesh) { mesh = _mesh; }
+ public slots:
+     void setXRotation(int angle);
+     void setYRotation(int angle);
+     void setZRotation(int angle);
 
-    if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        window.show();
-    else
-        window.showMaximized();
-    return app.exec();
-}
+ signals:
+     void xRotationChanged(int angle);
+     void yRotationChanged(int angle);
+     void zRotationChanged(int angle);
 
+protected:
+    void initializeGL();
+    void paintGL();
+    void resizeGL(int width, int height);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
+private:
+     int xRot;
+     int yRot;
+     int zRot;
 
+    QPoint lastPos;
+    QColor qtGreen;
+    QColor qtPurple;
+    Mesh *mesh;
+};
+
+ #endif
